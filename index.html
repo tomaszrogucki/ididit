@@ -9,6 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/lodash/4.9.0/lodash.min.js"></script>-->
     <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>-->
 
     <style type="text/css">
@@ -61,6 +62,10 @@
 
         body {
             font-size: 16px;
+        }
+
+        .hidden {
+            display: none;
         }
 
         .timeline {
@@ -260,10 +265,29 @@
 
 <div id="content"></div>
 <script type="text/babel">
+    var sortNumber = function (a, b) {
+        return a - b;
+    };
+
 
     var LogBox = React.createClass({
+        createItemsObject: function (data) {
+            var itemsObject = {};
+            data.forEach(function(value) {
+                if(value.year && value.month && value.day && value.hour && value.minute) {
+                    itemsObject[value.year] = itemsObject[value.year] || {};
+                    itemsObject[value.year][value.month] = itemsObject[value.year][value.month] || {};
+                    itemsObject[value.year][value.month][value.day] = itemsObject[value.year][value.month][value.day] || {};
+                    itemsObject[value.year][value.month][value.day][value.hour] = itemsObject[value.year][value.month][value.day][value.hour] || {};
+                    itemsObject[value.year][value.month][value.day][value.hour][value.minute] = itemsObject[value.year][value.month][value.day][value.hour][value.minute] || {};
+                    itemsObject[value.year][value.month][value.day][value.hour][value.minute][value.id] = value.text;
+                }
+            });
+            return itemsObject;
+        },
         loadLog: function () {
             var items = JSON.parse(localStorage.getItem("ididitLogItems")) || [];
+            this.createItemsObject(items);
             this.setState({data: items});
         },
         handleItemSubmit: function (item) {
@@ -286,8 +310,8 @@
             item.second = second;
 
             var newItems = items.concat([item]);
-            this.setState({data: newItems});
             localStorage.setItem("ididitLogItems", JSON.stringify(newItems));
+            this.setState({data: newItems});
 
         },
         getInitialState: function () {
@@ -300,7 +324,94 @@
             return (
                     <div className="logBox">
                         <ItemForm onItemSubmit={this.handleItemSubmit}/>
-                        <ItemList data={this.state.data}/>
+                        <YearList data={this.createItemsObject(this.state.data)}/>
+                    </div>
+            );
+        }
+    });
+
+
+    var YearList = React.createClass({
+        render: function () {
+            var years = Object.keys(this.props.data).sort(sortNumber).reverse();
+            var yearNodes = years.map(function(year) {
+                var dateObj = new Date();
+                var theClass = 'timeline'; //(parseInt(year, 10) !== dateObj.getUTCFullYear()) ? 'timeline' : 'timeline hidden';
+                return (
+                    <div className="yearItem" key={year}>
+                        <ul className={theClass}>
+                            <li className="year">
+                                <div className="dot"></div>
+                                <div className="time"><span>{year}</span></div>
+                                <div className="text">&nbsp;</div>
+                            </li>
+                        </ul>
+                        <MonthList data={this.props.data[year]}/>
+                    </div>
+                );
+            }.bind(this));
+            return (
+                    <div className="yearList">
+                        {yearNodes}
+                    </div>
+            );
+        }
+    });
+
+
+    var MonthList = React.createClass({
+        render: function () {
+            var months = Object.keys(this.props.data).sort(sortNumber).reverse();
+            var monthNodes = months.map(function(month) {
+                var formatMonth = function (month) {
+                    var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                    return months[month-1];
+                };
+                var dateObj = new Date();
+                // TODO: pass current year before performing this comparison
+                var theClass = 'timeline'; //(parseInt(month, 10) !== dateObj.getUTCMonth() + 1) ? 'timeline' : 'timeline hidden';
+                return (
+                        <div className="monthItem" key={month}>
+                            <ul className={theClass}>
+                                <li className="month">
+                                    <div className="dot"></div>
+                                    <div className="time"><span>{formatMonth(month)}</span></div>
+                                    <div className="text">&nbsp;</div>
+                                </li>
+                            </ul>
+                            <DayList data={this.props.data[month]}/>
+                        </div>
+                );
+            }.bind(this));
+            return (
+                    <div className="monthList">
+                        {monthNodes}
+                    </div>
+            );
+        }
+    });
+
+
+    var DayList = React.createClass({
+        render: function () {
+            var days = Object.keys(this.props.data).sort(sortNumber).reverse();
+            var dayNodes = days.map(function(day) {
+                var dateObj = new Date();
+//                var theClass = (parseInt(day, 10) !== dateObj.getUTCDate()) ? 'timeline' : 'timeline hidden';
+                return (
+                        <ul className="timeline" key={day}>
+                            <li className="day">
+                                <div className="dot"></div>
+                                <div className="time"><span>{day}</span></div>
+                                <div className="text">&nbsp;</div>
+                            </li>
+                            <ItemList data={this.props.data[day]}/>
+                        </ul>
+                );
+            }.bind(this));
+            return (
+                    <div className="dayList">
+                        {dayNodes}
                     </div>
             );
         }
@@ -309,20 +420,38 @@
 
     var ItemList = React.createClass({
         render: function () {
-            var itemNodes = this.props.data.reverse().map(function (item) {
-                return (
-                        <Item day={item.hour} key={item.id}>
-                            {item.text}
-                        </Item>
-                );
-            });
+            var formatTime = function (time) {
+                return ('0' + time).substr(-2);
+            };
+            var itemNodes = [];
+            var hours = Object.keys(this.props.data).sort(sortNumber).reverse();
+            hours.forEach(function(hour) {
+                var hourObject = this.props.data[hour];
+                var minutes = Object.keys(hourObject).sort(sortNumber).reverse();
+                minutes.forEach(function(minute) {
+                    var minuteObject = hourObject[minute];
+                    var items = Object.keys(minuteObject).sort(sortNumber).reverse();
+                    items.forEach(function(item) {
+                        itemNodes.push(
+                                <li key={item}>
+                                    <div className="dot"></div>
+                                    <div className="time">{formatTime(hour)}:{formatTime(minute)}</div>
+                                    <div className="text">{minuteObject[item]}</div>
+                                </li>
+                        );
+                    }.bind(this));
+                }.bind(this));
+            }.bind(this));
+
             return (
-                    <div className="timeline">
+                    <ul className="timeline">
                         {itemNodes}
-                    </div>
+                    </ul>
             );
         }
     });
+
+ 
 
     var ItemForm = React.createClass({
         getInitialState: function () {
