@@ -387,11 +387,12 @@
 
 
     var LogBox = React.createClass({
-        createItemsObject: function (data) {
+        createItemsObject: function (items) {
+            items = items || [];
             var itemsObject = {};
-            data.forEach(function(value) {
-                if(value.year !== null && value.month !== null && value.day !== null && value.hour !== null && value.minute !== null) {
-                    var dateObj = new Date(value.id);
+            items.forEach(function(value) {
+                if(value.date) {
+                    var dateObj = new Date(value.date);
                     var year = dateObj.getFullYear();
                     var month = dateObj.getMonth() + 1; //months from 1-12
                     var day = dateObj.getDate();
@@ -402,42 +403,28 @@
                     itemsObject[year][month][day] = itemsObject[year][month][day] || {};
                     itemsObject[year][month][day][hour] = itemsObject[year][month][day][hour] || {};
                     itemsObject[year][month][day][hour][minute] = itemsObject[year][month][day][hour][minute] || {};
-                    itemsObject[year][month][day][hour][minute][value.id] = value.text;
+                    itemsObject[year][month][day][hour][minute][value.date] = value.text;
                 }
             });
             return itemsObject;
         },
         loadLog: function () {
-            var items = JSON.parse(localStorage.getItem("ididitLogItems")) || [];
-            this.createItemsObject(items);
-            this.setState({data: items});
+            var data = JSON.parse(localStorage.getItem("effectifier:ididit:log")) || {};
+            this.setState({data: data});
         },
         handleItemSubmit: function (item) {
-            var items = this.state.data;
-
-            var dateObj = new Date();
-            var year = dateObj.getUTCFullYear();
-            var month = dateObj.getUTCMonth() + 1; //months from 1-12
-            var day = dateObj.getUTCDate();
-            var hour = dateObj.getUTCHours();
-            var minute = dateObj.getUTCMinutes();
-            var second = dateObj.getUTCSeconds();
-
-            item.id = Date.now();
-            item.year = year;
-            item.month = month;
-            item.day = day;
-            item.hour = hour;
-            item.minute = minute;
-            item.second = second;
+            var items = this.state.data.items || [];
+            item.date = Date.now();
 
             var newItems = items.concat([item]);
-            localStorage.setItem("ididitLogItems", JSON.stringify(newItems));
-            this.setState({data: newItems});
+            var data = this.state.data;
+            data.items = newItems;
+            localStorage.setItem("effectifier:ididit:log", JSON.stringify(data));
+            this.setState({data: data});
 
         },
         getInitialState: function () {
-            return {data: []};
+            return {data: {items: []}};
         },
         componentDidMount: function () {
             this.loadLog();
@@ -446,7 +433,7 @@
             return (
                     <div className="logBox">
                         <ItemForm onItemSubmit={this.handleItemSubmit}/>
-                        <YearList data={this.createItemsObject(this.state.data)}/>
+                        <YearList data={this.createItemsObject(this.state.data.items)}/>
                     </div>
             );
         }
