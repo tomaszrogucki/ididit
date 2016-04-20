@@ -390,13 +390,19 @@
         createItemsObject: function (data) {
             var itemsObject = {};
             data.forEach(function(value) {
-                if(value.year && value.month && value.day && value.hour && value.minute) {
-                    itemsObject[value.year] = itemsObject[value.year] || {};
-                    itemsObject[value.year][value.month] = itemsObject[value.year][value.month] || {};
-                    itemsObject[value.year][value.month][value.day] = itemsObject[value.year][value.month][value.day] || {};
-                    itemsObject[value.year][value.month][value.day][value.hour] = itemsObject[value.year][value.month][value.day][value.hour] || {};
-                    itemsObject[value.year][value.month][value.day][value.hour][value.minute] = itemsObject[value.year][value.month][value.day][value.hour][value.minute] || {};
-                    itemsObject[value.year][value.month][value.day][value.hour][value.minute][value.id] = value.text;
+                if(value.year !== null && value.month !== null && value.day !== null && value.hour !== null && value.minute !== null) {
+                    var dateObj = new Date(value.id);
+                    var year = dateObj.getFullYear();
+                    var month = dateObj.getMonth() + 1; //months from 1-12
+                    var day = dateObj.getDate();
+                    var hour = dateObj.getHours();
+                    var minute = dateObj.getMinutes();
+                    itemsObject[year] = itemsObject[year] || {};
+                    itemsObject[year][month] = itemsObject[year][month] || {};
+                    itemsObject[year][month][day] = itemsObject[year][month][day] || {};
+                    itemsObject[year][month][day][hour] = itemsObject[year][month][day][hour] || {};
+                    itemsObject[year][month][day][hour][minute] = itemsObject[year][month][day][hour][minute] || {};
+                    itemsObject[year][month][day][hour][minute][value.id] = value.text;
                 }
             });
             return itemsObject;
@@ -452,7 +458,7 @@
             var years = Object.keys(this.props.data).sort(sortNumber).reverse();
             var yearNodes = years.map(function(year) {
                 var dateObj = new Date();
-                var theClass = 'timeline'; //(parseInt(year, 10) !== dateObj.getUTCFullYear()) ? 'timeline' : 'timeline hidden';
+                var theClass = (parseInt(year, 10) !== dateObj.getFullYear()) ? 'timeline' : 'timeline hidden';
                 return (
                     <div className="yearItem" key={year}>
                         <ul className={theClass}>
@@ -462,7 +468,7 @@
                                 <div className="text">&nbsp;</div>
                             </li>
                         </ul>
-                        <MonthList data={this.props.data[year]}/>
+                        <MonthList data={this.props.data[year]} year={year}/>
                     </div>
                 );
             }.bind(this));
@@ -477,6 +483,7 @@
 
     var MonthList = React.createClass({
         render: function () {
+            var year = this.props.year;
             var months = Object.keys(this.props.data).sort(sortNumber).reverse();
             var monthNodes = months.map(function(month) {
                 var formatMonth = function (month) {
@@ -484,8 +491,7 @@
                     return months[month-1];
                 };
                 var dateObj = new Date();
-                // TODO: pass current year before performing this comparison
-                var theClass = 'timeline'; //(parseInt(month, 10) !== dateObj.getUTCMonth() + 1) ? 'timeline' : 'timeline hidden';
+                var theClass = (parseInt(year, 10) === dateObj.getFullYear() && parseInt(month, 10) === dateObj.getMonth() + 1) ? 'timeline hidden' : 'timeline';
                 return (
                         <div className="monthItem" key={month}>
                             <ul className={theClass}>
@@ -495,7 +501,7 @@
                                     <div className="text">&nbsp;</div>
                                 </li>
                             </ul>
-                            <DayList data={this.props.data[month]}/>
+                            <DayList data={this.props.data[month]} year={this.props.year} month={month}/>
                         </div>
                 );
             }.bind(this));
@@ -510,15 +516,33 @@
 
     var DayList = React.createClass({
         render: function () {
+            var getDayOfWeek = function (obj) {
+                var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                var dayOfWeekIndex = new Date(obj.year, obj.month - 1, obj.day).getDay();
+                return days[dayOfWeekIndex];
+            };
+            var year = this.props.year;
+            var month = this.props.month;
             var days = Object.keys(this.props.data).sort(sortNumber).reverse();
             var dayNodes = days.map(function(day) {
                 var dateObj = new Date();
-//                var theClass = (parseInt(day, 10) !== dateObj.getUTCDate()) ? 'timeline' : 'timeline hidden';
+                var dayString = getDayOfWeek({year: year, month: month, day: day}) + ', ' + day;
+                var theClass = 'day';
+                if (parseInt(year, 10) === dateObj.getFullYear() && parseInt(month, 10) === dateObj.getMonth() + 1) {
+                    if (parseInt(day, 10) === dateObj.getDate()) {
+                        dayString = 'Today';
+//                        theClass = 'day hidden';
+                    }
+                    else if (parseInt(day, 10) === dateObj.getDate() - 1) {
+                        dayString = 'Yesterday';
+                    }
+                }
+
                 return (
                         <ul className="timeline" key={day}>
-                            <li className="day">
+                            <li className={theClass}>
                                 <div className="dot"></div>
-                                <div className="time"><span>{day}</span></div>
+                                <div className="time"><span>{dayString}</span></div>
                                 <div className="text">&nbsp;</div>
                             </li>
                             <ItemList data={this.props.data[day]}/>
@@ -590,7 +614,7 @@
                     <div className="formContainer">
                         <div className="form">
                             <form onSubmit={this.handleSubmit}>
-                                <input className="addItem" type="text" placeholder="I did it today..." value={this.state.text} onChange={this.handleTextChange}/>
+                                <input className="addItem" type="text" autofocus placeholder="I did it today..." value={this.state.text} onChange={this.handleTextChange}/>
                                 <input className="addButton" type="submit" value="+"/>
                             </form>
                         </div>
