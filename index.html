@@ -567,6 +567,9 @@
 
 
         var ItemForm = React.createClass({
+            componentDidUpdate: function () {
+                ReactDOM.findDOMNode(this).getElementsByClassName('addItem')[0].focus();
+            },
             getInitialState: function () {
                 return {text: ''};
             },
