@@ -439,22 +439,100 @@
             return itemsObject;
         },
         loadLog: function () {
-            var data = JSON.parse(localStorage.getItem("effectifier:ididit:log")) || {};
-            this.setState({data: data});
+            var timeAgo = function (time) {
+                var someDay = Date.now();
+                var hour = 60 * 60 * 1000;
+                var day = 24 * hour;
+                if (time.days) {
+                    someDay -= time.days * day;
+                }
+                if (time.hours) {
+                    someDay -= time.hours * hour;
+                }
+                return someDay;
+            };
+            var mockData = {
+                items: [
+                    {
+                        date: timeAgo({days: 0, hours: 0}),
+                        text: "Welcome to I DID IT - your personal Activity Log!"
+                    },
+                    {
+                        date: timeAgo({days: 0, hours: 1}),
+                        text: "Stay organised!"
+                    },
+                    {
+                        date: timeAgo({days: 0, hours: 2}),
+                        text: "Keep all activities in one place!"
+                    },
+                    {
+                        date: timeAgo({days: 0, hours: 3}),
+                        text: "Stand up meetings? Retrospectives? Monthly reports?"
+                    },
+                    {
+                        date: timeAgo({days: 0, hours: 4}),
+                        text: "We've got you covered!"
+                    },
+                    {
+                        date: timeAgo({days: 1, hours: 0}),
+                        text: "This is a sample Log."
+                    },
+                    {
+                        date: timeAgo({days: 1, hours: 1}),
+                        text: "It will disappear as soon as you create your first entry."
+                    },
+                    {
+                        date: timeAgo({days: 1, hours: 2}),
+                        text: "Just start typing and press Enter."
+                    },
+                    {
+                        date: timeAgo({days: 2, hours: 0}),
+                        text: "In the Beta version your log will be stored locally."
+                    },
+                    {
+                        date: timeAgo({days: 2, hours: 1}),
+                        text: "Open the same browser on the same machine to recover your log."
+                    },
+                    {
+                        date: timeAgo({days: 2, hours: 2}),
+                        text: "Use a modern browser and refrain from Private Browsing / Incognito Mode."
+                    },
+                    {
+                        date: timeAgo({days: 32, hours: 0}),
+                        text: "Enjoy and don't forget to leave your feedback!"
+                    }
+                ]
+            };
+
+            if (!localStorage) {
+                mockData.items.unshift({
+                    date: timeAgo({days: -1, hours: 0}),
+                    text: "Your browser doesn't support LocalStorage. Please, use a modern browser!"
+                });
+            }
+
+            var localStorageItem = localStorage.getItem("effectifier:ididit:log");
+            var data = mockData;
+            var mock = true;
+            if(localStorageItem) {
+                mock = false;
+                data = JSON.parse(localStorageItem) || {};
+            }
+            this.setState({data: data, mock: mock});
         },
         handleItemSubmit: function (item) {
-            var items = this.state.data.items || [];
+            var items = this.state.mock ? [] : this.state.data.items || [];
             item.date = Date.now();
 
             var newItems = items.concat([item]);
-            var data = this.state.data;
+            var data = this.state.mock ? {} : this.state.data;
             data.items = newItems;
             localStorage.setItem("effectifier:ididit:log", JSON.stringify(data));
-            this.setState({data: data});
+            this.setState({data: data, mock: false});
 
         },
         getInitialState: function () {
-            return {data: {items: []}};
+            return {data: {items: []}, mock: true};
         },
         componentDidMount: function () {
             this.loadLog();
