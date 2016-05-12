@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="559.36481"
+   height="165.71904"
+   id="svg3452"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="ididitBeta.svg"
+   inkscape:export-filename="/Users/trogucki/workspace/ididit/files/ididit.png"
+   inkscape:export-xdpi="89.800758"
+   inkscape:export-ydpi="89.800758">
+  <defs
+     id="defs3454" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8"
+     inkscape:cx="501.08505"
+     inkscape:cy="114.28824"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1185"
+     inkscape:window-height="699"
+     inkscape:window-x="160"
+     inkscape:window-y="117"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata3457">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-52.302473,-538.07424)">
+    <path
+       style="fill:#fff7ea;fill-opacity:1;stroke:none;display:inline"
+       d="m 302.4081,538.07424 0,165.71875 c 45.76073,0 82.84375,-37.11427 82.84375,-82.875 0,-45.76073 -37.08302,-82.84375 -82.84375,-82.84375 z"
+       id="rect3141"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#fff7ea;fill-opacity:1;stroke:none;display:inline"
+       d="m 211.25185,538.07424 0,165.71875 c -45.76073,0 -82.84375,-37.11427 -82.84375,-82.875 0,-45.76073 37.08302,-82.84375 82.84375,-82.84375 z"
+       id="path3160"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#fff7ea;fill-opacity:1;stroke:none;display:inline"
+       d="m 52.302473,538.07424 0,165.71874 91.282677,0 c -27.612,-17.39008 -41.66531,-48.00224 -41.66531,-82.87785 0,-34.87564 14.05331,-65.46174 41.66531,-82.84089 z"
+       id="rect3167-7-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccscc" />
+    <path
+       style="fill:#fff7ea;fill-opacity:1;stroke:none;display:inline"
+       d="m 461.47576,703.79299 0,-165.71875 -91.28267,0 c 27.612,17.39007 41.6653,48.00223 41.6653,82.87785 0,34.87564 -14.0533,65.46173 -41.6653,82.8409 z"
+       id="rect3167-7-4-1"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccscc" />
+    <path
+       style="fill:#fff7ea;fill-opacity:1;stroke:none;display:inline"
+       d="m 231.82997,703.79299 0,-165.71875 50,0 0,165.71875 -50,0 z"
+       id="rect3167"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#fff7ea;fill-opacity:1;stroke:none;display:inline"
+       d="m 481.97506,703.79299 0,-165.71875 50,0 0,165.71875 -50,0 z"
+       id="rect3167-8"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#fff7ea;fill-opacity:1;stroke:none;display:inline"
+       d="m 452.8479,538.07424 100.56391,0 0,50 -100.56391,0 0,-50 z"
+       id="rect3167-8-8"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:51.90916824px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:10.38183308px;word-spacing:0px;fill:#fff7ea;fill-opacity:1;stroke:none;font-family:Cambria;-inkscape-font-specification:Cambria"
+       x="-708.88788"
+       y="611.6673"
+       id="text4817"
+       sodipodi:linespacing="125%"
+       transform="matrix(0,-1,1,0,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan4819"
+         x="-708.88788"
+         y="611.6673"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:15.57275009px;fill:#fff7ea;fill-opacity:1;font-family:Open Sans;-inkscape-font-specification:Open Sans">BETA</tspan></text>
+  </g>
+</svg>

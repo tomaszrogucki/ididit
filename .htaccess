@@ -1,0 +1,5 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteCond %{HTTP_HOST} !^ididit.effectifier.com [NC]
+    RewriteRule ^/?(.*)$ http://ididit.effectifier.com/$1 [L,R=301]
+</IfModule>
